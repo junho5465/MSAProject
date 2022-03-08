@@ -27,18 +27,30 @@ spring:
           predicates:
             - Path=/order/** # 해당 gateway 서버의 /order/**로 들어오는 요은 order-service로 인식하겠다는 조건
           filters:
-            - RewritePath=/order/?(?<segment>.*), /$\{segment}            
+            - RewritePath=/order/?(?<segment>.*), /$\{segment} 
+        - id: menu-service
+          uri: lb://MENU-SERVICE # uri: http://localhost:54412 # 포워딩 할 주소, http://localhost:8000/order 로 들어오면 http://localhost:54412 로 포워딩
+          predicates:
+            - Path=/menu/** # 해당 gateway 서버의 /order/**로 들어오는 요은 order-service로 인식하겠다는 조건
+          filters:
+            - RewritePath=/menu/?(?<segment>.*), /$\{segment}     
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE # uri: http://localhost:54412 # 포워딩 할 주소, http://localhost:8000/order 로 들어오면 http://localhost:54412 로 포워딩
+          predicates:
+            - Path=/product/** # 해당 gateway 서버의 /order/**로 들어오는 요은 order-service로 인식하겠다는 조건
+          filters:
+            - RewritePath=/product/?(?<segment>.*), /$\{segment}                     
   security:
     oauth2:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8080/auth/realms/apigateway
+            issuer-uri: http://localhost:8080/auth/realms/my_realm
             user-name-attribute: preferred_username
         registration: 
           keycloak:
-            client-id: apigateway
-            client-secret: pH8nXIYD9dJuhftF69e8hcQvr8dYPUdx
+            client-id: my_client
+            client-secret: imCYXN5cCxKnUMcTLEf704tXznEw6LuO
     gateway:
       default-filters:
         - TokenRelay=
